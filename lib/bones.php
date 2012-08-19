@@ -3,6 +3,8 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ERROR | E_PARSE);
 
+define('ROOT', __DIR__ . '/..');
+
 function get($route, $callback) {
     Bones::register($route, $callback);
 }
