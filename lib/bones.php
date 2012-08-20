@@ -13,6 +13,10 @@ class Bones {
     private static $instance;
     public static $route_found = false;
 
+    public $route = '';
+    public $content = '';
+    public $vars = array();
+
     public static function get_instance() {
         if (!isset (self::$instance)) {
             self::$instance = new Bones();
@@ -42,6 +46,23 @@ class Bones {
             echo $callback($bones);
         } else {
             return false;
+        }
+    }
+
+    public function set($index, $value) {
+        $this->vars[$index] = $value;
+    }
+
+    public function render($view, $layout = "layout") {
+        $this->content = ROOT . '/views/' . $view . '.php';
+        foreach ($this->vars as $key => $value) {
+            $$key = $value;
+        }
+
+        if (!$layout) {
+            include($this->content);
+        } else {
+            include (ROOT . '/views' . $layout . '.php');
         }
     }
 }
