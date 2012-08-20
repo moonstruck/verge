@@ -3,7 +3,7 @@
 ini_set('display_errors', 'On');
 error_reporting(E_ERROR | E_PARSE);
 
-define('ROOT', __DIR__ . '/..');
+define('ROOT', '/var/www/verge');
 
 function get($route, $callback) {
     Bones::register($route, $callback);
@@ -16,6 +16,10 @@ class Bones {
     public $route = '';
     public $content = '';
     public $vars = array();
+    
+    public function __construct() {
+        $this->route = $this->get_route();
+    }
 
     public static function get_instance() {
         if (!isset (self::$instance)) {
@@ -24,10 +28,7 @@ class Bones {
 
         return self::$instance;
     }
-
-    public function __construct() {
-        $this->route = $this->get_route();
-    }
+    
 
     protected function get_route() {
         parse_str($_SERVER['QUERY_STRING'], $route);
