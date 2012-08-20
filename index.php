@@ -14,3 +14,11 @@ post('/signup', function($app) {
     $app->set('message', 'Thanks for Sifning Up' . $app->form('name') . '!');
     $app->render('home');
 });
+
+get('/say/:message', function($app){
+    $app->set('message', $app->request('message'));
+    $app->render('home');
+});
+
+$a = get_included_files();
+print_r($a);

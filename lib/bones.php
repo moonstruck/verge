@@ -29,9 +29,12 @@ class Bones {
     public $method = '';
     public $content = '';
     public $vars = array();
+    public $route_segments = array();
+    public $route_variables = array();
     
     public function __construct() {
         $this->route = $this->get_route();
+        $this->route_segments = explode('/', trim($this->route, ''));
         $this->method = $this->get_method();
     }
 
@@ -58,13 +61,39 @@ class Bones {
     }
 
     public static function register($route, $callback, $method) {
-        $bones = static::get_instance();
+        if (!static::$route_found) {
+            $bones = static::get_instance();
+            $url_parts = explode('/', trim($route, '/'));
+            $matched = null;
 
-        if ($route == $bones->route && !static::$route_found && $bones->method == $method) {
-            static::$route_found = true;
-            echo $callback($bones);
-        } else {
-            return false;
+            if (count($bones->route_segments) == count($url_parts)) {
+                foreach($url_parts as $key => $value) {
+                    if (strpos($part, ":") !== false) {
+                        //Contains a route variable
+                        $bones->route_variable[substr($part, 1)] = $bones->route_segments[$key];
+                    } else {
+                        //Does not contain route variable
+                        if ($part == $bones->route_segments[$key]) {
+                            if (!$mathced) {
+                                //Route match
+                                $matched = true;
+                            }
+                        } else {
+                            //Route don't match
+                            $matched = false;
+                        }
+                    }
+                }
+            } else {
+                //Routes are different lenghts
+                $matched = false;
+            }
+            if (!$matched || $bones->method != $method) {
+                return false;
+            } else {
+                static::$route_found = true;
+                echo $callback($bones);
+            }
         }
     }
 
@@ -74,6 +103,10 @@ class Bones {
 
     public function form($key) {
         return $_POST[$key];
+    }
+
+    public function request($key) {
+        return $this->route_variables[$key];
     }
 
     public function make_route($path = '') {
