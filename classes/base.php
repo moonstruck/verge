@@ -1,6 +1,7 @@
 <?php
 abstract class Base
 {
+    protected $_id;
     protected $type;
     
     public function __construct($type)
@@ -9,11 +10,11 @@ abstract class Base
     }
     
     public function __get($property) {
-        return $this->property;
+        return $this->$property;
     }
 
     public function __set($property, $value) {
-        $this->property = $value;
+        $this->$property = $value;
     }
     
     public function to_json() {
