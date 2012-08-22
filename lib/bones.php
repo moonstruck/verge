@@ -5,6 +5,7 @@ error_reporting(E_ERROR | E_PARSE);
 
 //define('ROOT', __DIR__ . '/..');
 define('ROOT', dirname(dirname(__FILE__)));
+require_once ROOT . '/lib/bootstrap.php';
 require_once ROOT . '/lib/sag/src/Sag.php';
 
 function __autoload($classname) {
@@ -130,6 +131,11 @@ class Bones {
   public function request($key) {
     return $this->route_variables[$key];
   }
+
+  public function redirect($path = '/') {
+    header('Location: ' . $this->make_route($path));
+  }
+
   
 	public function render($view, $layout = "layout") {
     $this->content = ROOT. '/views/' . $view . '.php';
@@ -143,6 +149,14 @@ class Bones {
         include(ROOT. '/views/' . $layout . '.php');        
     }
 
+  }
+
+  public function display_alert($variable = 'error') {
+    if (isset($this->vars[$variable])) {
+      return "<div class='alert alert-".$variable."'>
+              <a class='close' data-dismiss='alert'>x</a>" . $this->vars[$variable] .
+              "</div>";
+    }
   }
 
 }
