@@ -28,6 +28,10 @@ function delete($route, $callback) {
 	Bones::register($route, $callback, 'DELETE');
 }
 
+function resolve() {
+  Bones::resolve();
+}
+
 class Bones {
   private static $instance;
   public static $route_found = false;
@@ -156,6 +160,24 @@ class Bones {
       return "<div class='alert alert-".$variable."'>
               <a class='close' data-dismiss='alert'>x</a>" . $this->vars[$variable] .
               "</div>";
+    }
+  }
+
+  public function error500($exception) {
+    $this->set('exception', $exception);
+    $this->render('error/500');
+    exit;
+  }
+
+  public function error404() {
+    $this->render('error/404');
+    exit;
+  }
+
+  public static function resolve() {
+    if (!static::$route_found) {
+      $bones = static::get_instance();
+      $bones->error404();
     }
   }
 
