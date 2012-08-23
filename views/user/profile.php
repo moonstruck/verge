@@ -17,6 +17,13 @@
 			</div>
 		</div>
 		<div class="span8">
+			<?php if ($is_current_user) { ?>
+				<h2>Create a new post</h2>
+				<form action="<?php echo $this->make_route('/post')?>" method="post">
+					<textarea id="content" name="content" class="span8" rows="13"></textarea>
+					<button id="create_post" class="btn btn-primary">Submit</button>
+				</form>
+			<?php } ?>
 			<h2>Posts</h2>
 		</div>
 	</div>
